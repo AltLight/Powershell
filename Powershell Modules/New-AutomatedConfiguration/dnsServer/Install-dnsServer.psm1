@@ -1,0 +1,4 @@
+function Install-dnsServer
+{
+    
+}

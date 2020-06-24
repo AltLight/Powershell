@@ -1,0 +1,132 @@
+[
+    {
+        "hostname" : "nazerick",
+        "ipv4" : [{
+            "ip" : "10.8.5.4",
+            "prefixlength" : "26",
+            "gateway" : "10.8.5.1",
+            "dnsserver" : [
+                "10.8.5.4",
+                "10.8.5.5"
+            ]
+        }],
+        "services" : [
+            "AD-Domain-Services",
+            "DNS Server",
+            "DHCP"
+        ],
+        "adinfo" : [{
+            "parentdomain" : 0,
+            "selfdomain" : "nazerick.mhl"
+        }],
+        "dhcpinfo" : [{
+            "scope1" : [{
+                "networkIP" : "10.8.1.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.1.1"
+            }],
+            "scope2" : [{
+                "networkIP" : "10.8.1.128",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.1.129"
+            }],
+            "scope3" : [{
+                "networkIP" : "10.8.7.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.7.1"
+            }]
+        }],
+        "dnsinfo" : [{
+            "forwardlzName" : "nazerick.mhl",
+            "reverselz" : [
+                "0.8.10",
+                "1.8.10",
+                "3.8.10",
+                "5.8.10",
+                "6.8.10",
+                "7.8.10",
+                "14.8.10",
+                "1.9.10",
+                "10.10.10",
+                "16.172"
+            ]
+        }]
+    },
+    {
+        "hostname" : "pleades",
+        "ipv4" : [{
+            "ip" : "10.8.5.5",
+            "prefixlength" : "26",
+            "gateway" : "10.8.5.1",
+            "dnsserver" : [
+                "10.8.5.5",
+                "10.8.5.4"
+            ]
+        }],
+        "services" : [
+            "AD-Domain-Services",
+            "DNS Server",
+            "DHCP"
+        ],
+        "adinfo" : [{
+            "parentdomain" : 0,
+            "selfdomain" : "nazerick.mhl"
+        }],
+        "dhcpinfo" : [{
+            "scope1" : [{
+                "networkIP" : "10.8.1.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.1.1"
+            }],
+            "scope2" : [{
+                "networkIP" : "10.8.1.128",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.1.129"
+            }],
+            "scope3" : [{
+                "networkIP" : "10.8.7.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.5.4",
+                    "10.8.5.5"
+                ],
+                "gateway" : "10.8.7.1"
+            }]
+        }],
+        "dnsinfo" : [{
+            "forwardlzName" : "nazerick.mhl",
+            "reverselz" : [
+                "0.8.10",
+                "1.8.10",
+                "3.8.10",
+                "5.8.10",
+                "6.8.10",
+                "7.8.10",
+                "14.8.10",
+                "1.9.10",
+                "10.10.10",
+                "16.172"
+            ]
+        }]
+    }
+]
