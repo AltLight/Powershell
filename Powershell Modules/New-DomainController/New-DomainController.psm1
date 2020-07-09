@@ -15,14 +15,11 @@ function New-DomainController
     param()
     [CmdletBinding]
 
-    $AllServerData = Get-Content -Raw -Path ($PSScriptRoot + "\dcInfo.json") | ConvertFrom-Json
     $CompName = $env:COMPUTERNAME
-    if ($ServerData.hostname -inotcontains $CompName)
-    {
-        break
-    }
-
-    $ServerData = $ServerData | Where-Object "hostname" -Match $CompName
+    $ServerData = (Get-Content -Raw -Path ($PSScriptRoot + "\dcInfo.json")  |`
+        ConvertFrom-Json) |`
+        Where-Object hostname -Match $CompName
+        
 
     $ipArgs = @{
         "ipv4Address" = $ServerData.ipv4.ip;
@@ -30,9 +27,13 @@ function New-DomainController
         "Gateway" = $ServerData.ipv4.gateway
         "dnsAddress" = $ServerData.ipv4.dnsserver -join ","
     }
+
     $ipSetCheck = Set-IPv4 @ipArgs
 
-    if ($null -ne $ipSetCheck)
+    $ipSetCheck
+    Pause
+
+    if ($true -ne $ipSetCheck.result)
     {
         Write-host "$CompName errored setting the network adapter, see logs below:" -ForegroundColor Red
         $ipSetCheck | Format-Table -AutoSize -Wrap
@@ -40,26 +41,21 @@ function New-DomainController
     }
 
     [hashtable]$AllServices = @{
-        "Ad-Domain-Services" = "adServer";
-        "DNS Server" = "dnsServer";
+        "AD-Domain-Services" = "adServer";
+        "DNS" = "dnsServer";
         "DHCP" = "dhcpServer"
     }
+    Install-WindowsFeature -Name Bits
     foreach ($service in $ServerData.services)
     {
         if ($AllServices.Keys -icontains $service)
         {
             $ServiceName = ($AllServices.GetEnumerator() | Where-Object Name -Match $service).Value
-            $InstallCMD = "Install-" + $ServiceName
-            $SetCMD = "Set-" + $ServiceName
-            
-            Install-WindowsFeature -Name Bits
-            if ($ServiceName -eq $AllServices[0].value)
-            {
-                $PassData = $service.adinfo
-            }
+            $setCommand = "Set-$ServiceName"
+            $PassData = $ServerData.$ServiceName
 
-            &$InstallCMD 
-            &$SetCMD
+            Install-WindowsFeature $service -IncludeManagementTools
+            &$setCommand -passedData $PassData
         }  
     }
 }
