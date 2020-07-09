@@ -100,8 +100,8 @@
             "scope1" : [{
                 "name" : "lan",
                 "networkIP" : "10.8.1.0",
-                "startip" : "10.8.1.20",
-                "endip" : "10.8.1.22",
+                "startIP" : "10.8.1.20",
+                "endIP" : "10.8.1.22",
                 "subnet" : "255.255.255.192",
                 "domain" : "nazerick.mhl",
                 "dns" : [
@@ -112,8 +112,8 @@
             "scope2" : [{
                 "name" : "dev",
                 "networkIP" : "10.8.7.0",
-                "startip" : "10.8.7.30",
-                "endip" : "10.8.7.30",
+                "startIP" : "10.8.7.30",
+                "endIP" : "10.8.7.30",
                 "subnet" : "255.255.255.192",
                 "domain" : "nazerick.mhl",
                 "dns" : [

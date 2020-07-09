@@ -37,7 +37,7 @@ function New-DomainController
     }
     $ipSetCheck = Set-IPv4 @ipArgs
 
-    if ($true -eq $ipSetCheck.result)
+    if ($true -ne $ipSetCheck.result)
     {
         Write-Output "[ERROR] [$($TimeStamp.Invoke())] $CompName errored setting the network adapter, see logs below:" | Out-File $LogFile -Append
         $ipSetCheck | Format-Table -AutoSize -Wrap
