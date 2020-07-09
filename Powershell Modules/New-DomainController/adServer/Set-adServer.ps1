@@ -5,12 +5,8 @@ function Set-adServer
         $passedData
     )
     [CmdletBinding]
-
-    $passedData
-    pause
-
     
-    if ($null -eq $passedData.rootDomainController)
+    if (0 -eq ($passedData.rootDomainController).length)
     {
         $Arguments = @{
             "CreateDnsDelegation" = $passedData.CreateDnsDelegation
@@ -41,28 +37,7 @@ function Set-adServer
             "SysvolPath" = $passedData.SysvolPath
             "LogPath" = $passedData.LogPath
             "NoRebootOnCompletion" = $passedData.NoRebootOnCompletion
-            
-            "domainNetbiosName" = $passedData.domainNetbiosName
-            "Force" = $passedData.Force
         }
-        $installCMD = 'Install-ADDSDomain'
+        Install-ADDSDomain @Arguments
     }
-
-    workflow Configure_ActiveDirectory
-    {
-        Write-Output "Before reboot" | Out-File  C:/Log/t.txt -Append
-
-        InlineScript {"$installCMD @Arguments -Wait"}
-
-        Write-Output "$Now2 After reboot" | Out-File  C:/Log/t.txt -Append
-    }
-
-    $PSPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-    $Arguments = '-NonInteractive -WindowStyle Hidden -NoLogo -NoProfile -NoExit -Command "& {Import-Module PSWorkflow ; Get-Job | Resume-Job}"'
-    $Action = New-ScheduledTaskAction -Execute $PSPath -Argument $Arguments
-    $Option = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -WakeToRun
-    $Trigger = New-JobTrigger -AtStartUp -RandomDelay (New-TimeSpan -Minutes 5)
-    Register-ScheduledTask -TaskName ResumeJob -Action $Action -Trigger $Trigger -Settings $Option -RunLevel Highest
-
-    Configure_ActiveDirectory -AsJob
 }

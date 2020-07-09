@@ -10,13 +10,8 @@
                 "1.1.1.1"
             ]
         }],
-        "services" : [
-            "AD-Domain-Services",
-            "DNS",
-            "DHCP"
-        ],
         "adServer" : [{
-            "rootDomainController" : null,
+            "rootDomainController" : "",
             "CreateDnsDelegation" : false,
             "DatabasePath" : "%SYSTEMROOT%\\NTDS",
             "DomainMode" : "Win2008R2",
@@ -25,7 +20,7 @@
             "domainNetbiosName" : "NAZERICK",
             "InstallDNS" : true,
             "LogPath" : "%SYSTEMROOT%\\NTDS",
-            "NoRebootOnCompletion" : false,
+            "NoRebootOnCompletion" : true,
             "SysvolPath" : "%SYSTEMROOT%\\SYSVOL",
             "Force" : true
         }],
@@ -56,7 +51,9 @@
             }]
         }],
         "dnsServer" : [{
-            "forwardlzName" : "nazerick.mhl",
+            "primarylz" : [{
+                "10.8.7.0/26" : "nazerick.mhl"
+            }],
             "reverselz" : [
                 "0.8.10",
                 "1.8.10",
@@ -68,7 +65,82 @@
                 "1.9.10",
                 "10.10.10",
                 "16.172"
+            ],
+            "dnsforwarders" : [
+                "10.8.7.1"
+            ] 
+        }]
+    },
+    {
+        "hostname" : "Test-DC-02",
+        "ipv4" : [{
+            "ip" : "10.8.7.23",
+            "prefixlength" : "26",
+            "gateway" : "10.8.7.1",
+            "dnsserver" : [
+                "10.8.7.1",
+                "1.1.1.1"
             ]
+        }],
+        "adServer" : [{
+            "rootDomainController" : "",
+            "CreateDnsDelegation" : false,
+            "DatabasePath" : "%SYSTEMROOT%\\NTDS",
+            "DomainMode" : "Win2008R2",
+            "ForestMode" : "Win2008R2",
+            "domainName" : "nazerick.mhl",
+            "domainNetbiosName" : "NAZERICK",
+            "InstallDNS" : true,
+            "LogPath" : "%SYSTEMROOT%\\NTDS",
+            "NoRebootOnCompletion" : true,
+            "SysvolPath" : "%SYSTEMROOT%\\SYSVOL",
+            "Force" : true
+        }],
+        "dhcpServer" : [{
+            "scope1" : [{
+                "name" : "lan",
+                "networkIP" : "10.8.1.0",
+                "startip" : "10.8.1.20",
+                "endip" : "10.8.1.22",
+                "subnet" : "255.255.255.192",
+                "domain" : "nazerick.mhl",
+                "dns" : [
+                    "10.8.1.1"
+                ],
+                "gateway" : "10.8.1.1"
+            }],
+            "scope2" : [{
+                "name" : "dev",
+                "networkIP" : "10.8.7.0",
+                "startip" : "10.8.7.30",
+                "endip" : "10.8.7.30",
+                "subnet" : "255.255.255.192",
+                "domain" : "nazerick.mhl",
+                "dns" : [
+                    "10.8.7.1"
+                ],
+                "gateway" : "10.8.7.1"
+            }]
+        }],
+        "dnsServer" : [{
+            "primarylz" : [{
+                "10.8.7.0/26" : "nazerick.mhl"
+            }],
+            "reverselz" : [
+                "0.8.10",
+                "1.8.10",
+                "3.8.10",
+                "5.8.10",
+                "6.8.10",
+                "7.8.10",
+                "14.8.10",
+                "1.9.10",
+                "10.10.10",
+                "16.172"
+            ],
+            "dnsforwarders" : [
+                "10.8.7.1"
+            ] 
         }]
     }
 ]
