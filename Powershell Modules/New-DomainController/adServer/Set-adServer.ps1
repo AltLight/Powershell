@@ -2,7 +2,9 @@ function Set-adServer
 {
     param(
         [Parameter(mandatory = $true)]
-        $passedData
+        $passedData,
+        [Parameter(mandatory = $true)]
+        $Creds
     )
     [CmdletBinding]
     
@@ -10,6 +12,7 @@ function Set-adServer
     {
         $Arguments = @{
             "CreateDnsDelegation" = $passedData.CreateDnsDelegation
+            "SafeModeAdministratorPassword" = $Creds.password
             "DatabasePath" = $passedData.DatabasePath
             "DomainMode" = $passedData.DomainMode
             "ForestMode" = $passedData.ForestMode
@@ -21,7 +24,15 @@ function Set-adServer
             "SysvolPath" = $passedData.SysvolPath
             "Force" = $passedData.Force
         }
-        Install-ADDSForest @Arguments
+        try
+        {
+            Install-ADDSForest @Arguments
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        }
+        
     }
     else
     {
@@ -38,6 +49,13 @@ function Set-adServer
             "LogPath" = $passedData.LogPath
             "NoRebootOnCompletion" = $passedData.NoRebootOnCompletion
         }
-        Install-ADDSDomain @Arguments
+        try
+        {
+            Install-ADDSDomain @Arguments
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        }
     }
 }

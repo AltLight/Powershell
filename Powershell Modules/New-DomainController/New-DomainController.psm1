@@ -17,10 +17,14 @@ function New-DomainController
     )
     [CmdletBinding]
 
+    if ($false -eq (Test-Path -Path "C:\Log"))
+    {
+        mkdir -p C:\Log
+    }
     $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
     $LogFile = "C:/Log/New-DomainController.txt"
-    $CompName = $env:COMPUTERNAME
-    $ServerData = (Get-Content -Raw -Path ($PSScriptRoot + "\dcInfo.json")  |`
+    [string]$CompName = $env:COMPUTERNAME
+    $ServerData = (Get-Content -Raw -Path "$PSScriptRoot\dcInfo.json"  |`
         ConvertFrom-Json) |`
         Where-Object hostname -Match $CompName
         
@@ -32,7 +36,7 @@ function New-DomainController
 
     if ($FirstReboot)
     {
-        Set-adServices -dnsData -dhcpData
+        Set-adServices -dnsData $ServerData.dnsServer -dhcpData $ServerData.dhcpServer
         break
     }  
     Initialize-AD -ipData $ServerData.ipv4 -adData $ServerData.adServer

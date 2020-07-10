@@ -12,6 +12,9 @@ function Set-IPv4
     )
     [CmdletBinding]
 
+    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
+    $LogFile = "C:/Log/New-DomainController.txt"
+    
     $ipArgs = @{
         "IPAddress" = $ipv4Address;
         "PrefixLength" = $prefixLength;

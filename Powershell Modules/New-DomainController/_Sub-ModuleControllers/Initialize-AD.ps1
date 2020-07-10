@@ -11,6 +11,7 @@ function Initialize-AD
     $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
     $LogFile = "C:/Log/New-DomainController.txt"
     $CompName = $env:COMPUTERNAME
+    $cred = Get-Credential -UserName $env:USERNAME -Message "Enter God credentials:"
 
     # Configure IPv4 Adapter
     $ipArgs = @{
@@ -29,14 +30,17 @@ function Initialize-AD
     }
 
     # Install & Configure Initial Services:
+    Write-Output "[INFO] [$($TimeStamp.Invoke())] Installing Bits & Active Directory Services" | Out-File $LogFile -Append
     Install-WindowsFeature -Name Bits
     Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
 
+    Write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring Active Directory" | Out-File $LogFile -Append
+    Set-adServer -passedData $ServerData.adServer -Creds $cred
+
     workflow Resume-Configuration
     {
-        Write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring Active Directory" | Out-File $LogFile -Append
-        Set-adServer -passedData $ServerData.adServer
-        
+        $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
+        $LogFile = "C:/Log/New-DomainController.txt"
         Write-Output "[INFO] [$($TimeStamp.Invoke())] Rebooting server to have the active directory configuration take effect." | Out-File $LogFile -Append
         Restart-Computer -Force -Wait
 
@@ -51,7 +55,12 @@ function Initialize-AD
     $Action = New-ScheduledTaskAction -Execute $PSPath -Argument $Arguments
     $Option = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -WakeToRun
     $Trigger = New-JobTrigger -AtStartUp -RandomDelay (New-TimeSpan -Seconds 45)
-    Register-ScheduledTask  -TaskName 'Resume-Configuration' -Action $Action -Trigger $Trigger -Settings $Option -RunLevel Highest
+    Register-ScheduledTask  -TaskName 'Resume-Configuration'`
+                            -Credential $cred`
+                            -Action $Action`
+                            -Trigger $Trigger`
+                            -Settings $Option`
+                            -RunLevel Highest
 
     Resume-Configuration -AsJob
 }
