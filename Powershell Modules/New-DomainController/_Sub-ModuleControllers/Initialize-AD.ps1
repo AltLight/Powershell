@@ -22,10 +22,9 @@ function Initialize-AD
 
     $ipSetCheck = Set-IPv4 @ipArgs
 
-    if ($true -ne $ipSetCheck.result)
+    if ($true -ne $ipSetCheck)
     {
         Write-Output "[ERROR] [$($TimeStamp.Invoke())] $CompName errored setting the network adapter, see logs below:" | Out-File $LogFile -Append
-        $ipSetCheck | Format-Table -AutoSize -Wrap
         break
     }
 

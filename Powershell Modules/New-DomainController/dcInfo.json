@@ -52,20 +52,25 @@
         }],
         "dnsServer" : [{
             "primarylz" : [{
-                "10.8.7.0/26" : "nazerick.mhl"
+                "zone1" : [{
+                    "replicationScope" : "nazerick.mhl",
+                    "networkid" : [
+                        "10.8.0",
+                        "10.8.1",
+                        "10.8.2",
+                        "10.8.3",
+                        "10.8.4",
+                        "10.8.5",
+                        "10.8.6",
+                        "10.8.7",
+                        "10.10.10",
+                        "172.16"
+                    ],
+                    "staticEntryFiles" : [
+                        "\\staticHosts.csv"
+                    ]
+                }]
             }],
-            "reverselz" : [
-                "0.8.10",
-                "1.8.10",
-                "3.8.10",
-                "5.8.10",
-                "6.8.10",
-                "7.8.10",
-                "14.8.10",
-                "1.9.10",
-                "10.10.10",
-                "16.172"
-            ],
             "dnsforwarders" : [
                 "10.8.7.1"
             ] 
@@ -124,7 +129,10 @@
         }],
         "dnsServer" : [{
             "primarylz" : [{
-                "10.8.7.0/26" : "nazerick.mhl"
+                "plz1" : [{
+                    "networkid" : "10.8.7.0/26",
+                    "replicationScope" : "nazerick.mhl"
+                }]
             }],
             "reverselz" : [
                 "0.8.10",

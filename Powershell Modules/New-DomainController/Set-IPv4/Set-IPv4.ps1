@@ -12,10 +12,6 @@ function Set-IPv4
     )
     [CmdletBinding]
 
-    [string]$ModuleName = 'Set-IPv4'
-    [array]$ErrorArray
-    [hashtable]$ReturnData = @{}
-
     $ipArgs = @{
         "IPAddress" = $ipv4Address;
         "PrefixLength" = $prefixLength;
@@ -43,13 +39,12 @@ function Set-IPv4
     }
     catch
     {
-        $ErrorMessage = Get-ModuleErrors -ModuleName $ModuleName -ErrorMessage $_.exception.message
-        $ReturnData.Add("Error",$ErrorMessage)
+        write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
     }
 
     if ($ipv4Address -eq ($adapter | Get-NetIPConfiguration).IPv4Address.IPAddress)
     {
-        $ReturnData.Add("result",$true)
+        $ReturnData = $true
     }
     Return $ReturnData
 }

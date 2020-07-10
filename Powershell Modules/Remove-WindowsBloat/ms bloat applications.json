@@ -1,0 +1,13 @@
+[
+    {
+        "applications" : [
+            "Microsoft.bing",
+            "Microsoft.WindowsMaps",
+            "Microsoft.MicrosoftStickyNotes",
+            "Microsoft.ZuneVideo",
+            "Microsoft.ZuneMusic",
+            "Microsoft.YourPhone",
+            "Microsoft.GetStarted"
+        ]
+    }
+]

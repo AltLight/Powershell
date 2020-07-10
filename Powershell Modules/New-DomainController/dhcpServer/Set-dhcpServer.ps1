@@ -6,6 +6,9 @@ function Set-dhcpServer
     )
     [CmdletBinding]
 
+    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
+    $LogFile = "C:/Log/New-DomainController.txt"
+
     netsh dhcp add securitygroups
     Restart-Service dhcpserver
 
@@ -18,13 +21,29 @@ function Set-dhcpServer
             "SubnetMask" = $scope.subnet
             "State" = "Active"
         }
-        Set-DhcpServerv4Scope @AddScopeArgs
+        try
+        {
+            Set-DhcpServerv4Scope @AddScopeArgs
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        }
+        
         
         $SetScopeArgs = @{
             "ScopeID" = $scope.networkIP
             "LeaseDuration" = 1.00:00:00
         }
-        Set-DhcpServerv4Scope @SetScopeArgs
+        try
+        {
+            Set-DhcpServerv4Scope @SetScopeArgs
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        }
+        
 
         $SetOptionsArgs = @{
             "ScopeID" = $scope.networkIP
@@ -32,13 +51,30 @@ function Set-dhcpServer
             "DnsServer" = $scope.dns -join ","
             "Router" = $scope.gateway
         }
-        Set-DhcpServerv4OptionValue @SetOptionsArgs
+        try
+        {
+            Set-DhcpServerv4OptionValue @SetOptionsArgs
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        }
+        
     }
+    
     $hostIP = (Get-NetAdapter |`
          Where-Object { $_.Status -eq "up" } |`
          Get-NetIPConfiguration).IPv4Address.IPAddress
     
     $hostDomain = (Get-WmiObject Win32_ComputerSystem).domain
 
-    Add-DhcpServerInDC -DnsName $hostDomain -IpAddress $hostIP
+    try
+    {
+        Add-DhcpServerInDC -DnsName $hostDomain -IpAddress $hostIP
+    }
+    catch
+    {
+        write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+    }
+    
 }

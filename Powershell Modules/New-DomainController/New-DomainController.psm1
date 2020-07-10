@@ -35,6 +35,5 @@ function New-DomainController
         Set-adServices -dnsData -dhcpData
         break
     }  
-
     Initialize-AD -ipData $ServerData.ipv4 -adData $ServerData.adServer
 }
