@@ -13,9 +13,9 @@ function Set-dnsServer
     write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring DNS Server on $CompName" | Out-File $LogFile
     foreach ($Zone in $passedData.primarylz)
     {
-        $replicationsScope = $Zone.replicationsScope
+        $replicationsScope = $pZone.replicationsScope
         Add-DnsServerPrimaryZone -Name $replicationsScope
-        foreach ($network in $Zone.networkid)
+        foreach ($network in $pZone.networkid)
         {
             try
             {
@@ -26,7 +26,7 @@ function Set-dnsServer
                 write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
             }
         }
-        foreach ($file in $Zone.staticEntryFiles)
+        foreach ($file in $pZone.staticEntryFiles)
         {
             $filePath = "$PSScriptRoot\$file"
             if ($file.split(".")[1] -ne "csv")
@@ -46,6 +46,19 @@ function Set-dnsServer
                     write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
                 }
             }
+        }
+    }
+    foreach ($sZone in $passedData.secoondarylz)
+    {
+        $zoneFile = "$($sZone.secondaryadDomain).dns"
+        $masterServers = $sZone.secondaryadServerIP -join ","
+        try
+        {
+            Add-DnsServerSecondaryZone -Name $domain -ZoneFile $zoneFile -MasterServers $masterServers
+        }
+        catch
+        {
+            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
         }
     }
 }

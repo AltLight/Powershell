@@ -71,6 +71,15 @@
                     ]
                 }]
             }],
+            "secondarylz" : [{
+                "zone1" : [{
+                    "secondaryadDomain" : "",
+                    "secondaryadServerIP" : [
+                        ""
+                    ],
+                    "secondaryadHostname" : ""
+                }]
+            }],
             "dnsforwarders" : [
                 "10.8.7.1"
             ] 
