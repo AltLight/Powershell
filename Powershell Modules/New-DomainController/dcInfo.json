@@ -68,6 +68,9 @@
                     ],
                     "staticEntryFiles" : [
                         "\\staticHosts.csv"
+                    ],
+                    "dnsforwarders" : [
+                        "10.8.7.1"
                     ]
                 }]
             }],
@@ -79,10 +82,7 @@
                     ],
                     "secondaryadHostname" : ""
                 }]
-            }],
-            "dnsforwarders" : [
-                "10.8.7.1"
-            ] 
+            }]
         }]
     },
     {
