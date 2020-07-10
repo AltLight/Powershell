@@ -37,21 +37,22 @@ function Initialize-AD
     Write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring Active Directory" | Out-File $LogFile -Append
     Set-adServer -passedData $ServerData.adServer -Creds $cred
 
+    <#
     workflow Resume-Configuration
     {
         $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
         $LogFile = "C:/Log/New-DomainController.txt"
         Write-Output "[INFO] [$($TimeStamp.Invoke())] Rebooting server to have the active directory configuration take effect." | Out-File $LogFile -Append
-        Restart-Computer -Force -Wait
+        Restart-Computer -Force
 
         Write-Output "[INFO] [$($TimeStamp.Invoke())] Server has rebooted" | Out-File $LogFile -Append
         New-DomainController -FirstReboot
 
     }
-
+#>
     # Create a scheduled task to recall parent conrol module to continue configuration after reboot:
     $PSPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-    $Arguments = '-NonInteractive -WindowStyle Hidden -NoLogo -NoProfile -NoExit -Command "& {Import-Module PSWorkflow; Get-Job -State Suspended | Resume-Job}"'
+    $Arguments = '-NonInteractive -WindowStyle Hidden -NoLogo -NoProfile -NoExit -Command "& {New-DomainController -FirstReboot}"'
     $Action = New-ScheduledTaskAction -Execute $PSPath -Argument $Arguments
     $Option = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -WakeToRun
     $Trigger = New-JobTrigger -AtStartUp -RandomDelay (New-TimeSpan -Seconds 45)
@@ -62,5 +63,6 @@ function Initialize-AD
                             -Settings $Option`
                             -RunLevel Highest
 
-    Resume-Configuration -AsJob
+    #Resume-Configuration -AsJob
+    Restart-Computer -Force
 }
