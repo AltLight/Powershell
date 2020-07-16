@@ -13,12 +13,11 @@ function Set-dnsServer
 
     foreach ($pZone in $passedData.primarylz)
     {
-        $replicationScope = $pZone.replicationScope
         foreach ($network in $pZone.networkid)
         {
             try
             {
-                Add-DnsServerPrimaryZone -NetworkId "$network" -ReplicationScope $replicationScope -PassThru
+                Add-DnsServerPrimaryZone -NetworkId $network -ReplicationScope Forest -PassThru
             }
             catch
             {
@@ -34,11 +33,11 @@ function Set-dnsServer
                 break
             }
             $staticHosts = Get-Content -Raw -Path $filePath | ConvertFrom-CSV
-            foreach ($host in $staticHosts)
+            foreach ($shost in $staticHosts)
             {
                 try
                 {
-                    Add-DnsServerResourceRecordA -ZoneName $replicationScope -Name $host.hostname -IPv4Address $host.ip    
+                    Add-DnsServerResourceRecordA -ZoneName $pZone.zoneName -Name $shost.hostname -IPv4Address $shost.ip    
                 }
                 catch
                 {
