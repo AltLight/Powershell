@@ -35,12 +35,11 @@ function Initialize-AD
 
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring Active Directory"
     $adServerCheck = Set-adServer -passedData $ServerData.adServer 
-    if ($true -ne $adServer)
+    if ($true -ne $adServerCheck)
     {
-        Write-ToLog -ModuleName $ModuleName -ErrorMessage [string]$adServerCheck
+        Write-Host "An Error has occured while configuring Active Directory, review the error logs (see Write-ToLog module)." -ForegroundColor Red
         Break
     }
-
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Rebooting server to apply Active Directory configuration."
     Restart-Computer -Force
 }

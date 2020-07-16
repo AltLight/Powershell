@@ -30,7 +30,8 @@ function Set-adServer
         }
         catch
         {
-            $ReturnData = $_.exception.message
+            $ReturnData = $null
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
         
     }
@@ -57,6 +58,7 @@ function Set-adServer
         }
         catch
         {
+            $ReturnData = $null
             Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
     }
