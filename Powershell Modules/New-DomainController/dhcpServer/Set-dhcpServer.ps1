@@ -6,8 +6,7 @@ function Set-dhcpServer
     )
     [CmdletBinding]
 
-    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
-    [string]$LogFile = "C:/Log/New-DomainController.txt"
+    [string]$ModuleName
 
     netsh dhcp add securitygroups
     Restart-Service dhcpserver
@@ -27,13 +26,13 @@ function Set-dhcpServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
         
         
         $SetScopeArgs = @{
             "ScopeID" = $scope.networkIP
-            "LeaseDuration" = 1.00:00:00
+            "LeaseDuration" = "1.00:00:00"
         }
         try
         {
@@ -41,7 +40,7 @@ function Set-dhcpServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
         
 
@@ -57,7 +56,7 @@ function Set-dhcpServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
         
     }
@@ -74,7 +73,7 @@ function Set-dhcpServer
     }
     catch
     {
-        write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+        Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
     }
     
 }

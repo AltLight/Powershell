@@ -11,15 +11,15 @@ function Set-dnsServer
 
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS Server on $CompName"
 
-    foreach ($Zone in $passedData.primarylz)
+    foreach ($pZone in $passedData.primarylz)
     {
-        $replicationsScope = $pZone.replicationsScope
-        Add-DnsServerPrimaryZone -Name $replicationsScope
+        $replicationScope = $pZone.replicationScope
+        Add-DnsServerPrimaryZone -ReplicationScope $replicationScope
         foreach ($network in $pZone.networkid)
         {
             try
             {
-                Add-DnsServerPrimaryZone -NetworkId "$($network)" -ReplicationScope "$($replicationsScope)" -PassThru
+                Add-DnsServerPrimaryZone -NetworkId "$network" -ReplicationScope $replicationScope -PassThru
             }
             catch
             {
@@ -39,7 +39,7 @@ function Set-dnsServer
             {
                 try
                 {
-                    Add-DnsServerResourceRecordA -ZoneName $replicationsScope -Name $host.hostname -IPv4Address $host.ip    
+                    Add-DnsServerResourceRecordA -ZoneName $replicationScope -Name $host.hostname -IPv4Address $host.ip    
                 }
                 catch
                 {

@@ -10,7 +10,6 @@ function Initialize-AD
     # Set Script Varibales:
     [string]$ModuleName = 'Initialize-AD'
     $CompName = $env:COMPUTERNAME
-    $cred = Get-Credential -UserName $env:USERNAME -Message "Enter God credentials:"
 
     # Configure IPv4 Adapter
     $ipArgs = @{
@@ -27,7 +26,7 @@ function Initialize-AD
         Write-ToLog -ModuleName $ModuleName -ErrorMessage "$CompName | Errored setting the network adapter, error mesasge was:`n$ipSetCheck"
         break
     }
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "$CompName IP settings set to:`n$ipArgs"
+    Write-ToLog -ModuleName $ModuleName -InfoMessage "$CompName IP settings set to:`n$($ipArgs | Out-String)"
 
     # Install & Configure Initial Services:
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Installing Bits & Active Directory Services"
@@ -35,26 +34,13 @@ function Initialize-AD
     Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
 
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring Active Directory"
-    Set-adServer -passedData $ServerData.adServer -Creds $cred
-
-    # Create a scheduled task to recall parent conrol module to continue configuration after reboot:
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Creating Scheduled task to resume configuration after reboot"
-    [string]$PSPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-    $Arguments = '-NonInteractive -WindowStyle Hidden -NoLogo -NoProfile -NoExit -Command "& {New-DomainController -FirstReboot}"'
-    $Action = New-ScheduledTaskAction -Execute $PSPath -Argument $Arguments
-    $Option = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -WakeToRun
-    $Trigger = New-JobTrigger -AtStartUp -RandomDelay (New-TimeSpan -Seconds 45)
-    
-    $TaskArgs = @{
-        "Credential" = $creds
-        "TaskName" = "Resume-Configuration"
-        "Action" = $Action
-        "Trigger" = $Trigger
-        "Settings" = $Option
-        "RunLevel" = Highest
+    $adServerCheck = Set-adServer -passedData $ServerData.adServer 
+    if ($true -ne $adServer)
+    {
+        Write-ToLog -ModuleName $ModuleName -ErrorMessage [string]$adServerCheck
+        Break
     }
-    Register-ScheduledTask  @TaskArgs
 
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Rebooting server to apply Active Directory configuration."
-    Restart-Computer -Force
+#    Restart-Computer -Force
 }

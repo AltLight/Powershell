@@ -11,7 +11,7 @@
             ]
         }],
         "adServer" : [{
-            "rootDomainController" : "",
+            "rootDomainController" : "test-dc-01",
             "CreateDnsDelegation" : false,
             "DatabasePath" : "%SYSTEMROOT%\\NTDS",
             "DomainMode" : "Win2008R2",

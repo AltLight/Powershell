@@ -2,19 +2,16 @@ function Set-adServer
 {
     param(
         [Parameter(mandatory = $true)]
-        $passedData,
-        [Parameter(mandatory = $true)]
-        [securestring]$Creds
+        $passedData
     )
     [CmdletBinding]
-
-    [string]$ModuleName = 'Set-adServer'
     
+    [string]$ModuleName = 'Set-adServer'
+
     if (0 -eq ($passedData.rootDomainController).length)
     {
         $Arguments = @{
             "CreateDnsDelegation" = $passedData.CreateDnsDelegation
-            "SafeModeAdministratorPassword" = $Creds.password
             "DatabasePath" = $passedData.DatabasePath
             "DomainMode" = $passedData.DomainMode
             "ForestMode" = $passedData.ForestMode
@@ -29,18 +26,20 @@ function Set-adServer
         try
         {
             Install-ADDSForest @Arguments
+            $ReturnData = $true
         }
         catch
         {
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            $ReturnData = $_.exception.message
         }
         
     }
     else
     {
-        $adCreds = Get-Credential $passedData.domainName\administrator
+        $adCreds = Get-Credential -UserName "$($passedData.domainName)\administrator"
         $Arguments = @{
             "Credential" = $adCreds
+            "DomainType" = TreeDomain
             "NewDomainName" = $passedData.domainName
             "ParentDomainName" = $passedData.rootDomainController
             "InstallDNS" = $passedData.InstallDNS         
@@ -54,10 +53,12 @@ function Set-adServer
         try
         {
             Install-ADDSDomain @Arguments
+            $ReturnData = $true
         }
         catch
         {
             Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
     }
+    Return $ReturnData
 }

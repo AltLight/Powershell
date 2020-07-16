@@ -1,10 +1,10 @@
 ﻿hostname,commonName,ip
-albedo,,
+albedo,,10.8.3.4
+shaltear,,10.8.3.3
 ansiible,,
 confluence,,
 elasticsearch,,
 kibana,,
 logstash,,
-shaltear,,
 vcenter,vcsa,
 yuri,,
