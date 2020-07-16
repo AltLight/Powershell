@@ -1,10 +1,12 @@
 
-Function Test-WebStatus {
+Function Test-WebStatus
+{
     [Cmdletbinding()]
     Param(
         $PassedHost
     )
-    begin {
+    begin
+    {
         # Set script variables:
         $HostName = $PassedHost.hostname
         $url = $PassedHost.url
@@ -12,16 +14,20 @@ Function Test-WebStatus {
         $ReturnObj = New-Object psobject
         $Result = $null
     }
-    process {
+    process
+    {
         # Set up Variables:
         $Result = New-Object psobject
         # Try test and return Pass/Fail:
-        try {
-            if ((Invoke-Webrequest -Uri $url -UseBasicParsing).statuscode -eq $PassRequirement) {
+        try
+        {
+            if ((Invoke-Webrequest -Uri $url -UseBasicParsing).statuscode -eq $PassRequirement)
+            {
                 $Result = "Pass"
     
             }
-            else {
+            else
+            {
                 add-type @"
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -36,16 +42,19 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
                 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
                 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3, [Net.SecurityProtocolType]::Tls, [Net.SecurityProtocolType]::Tls11, [Net.SecurityProtocolType]::Tls12
     
-                if ((Invoke-Webrequest -Uri $url).statuscode -eq $PassRequirement) {
+                if ((Invoke-Webrequest -Uri $url).statuscode -eq $PassRequirement)
+                {
                     $Result = "Pass"
                 }
             }
         }
-        catch {
+        catch
+        {
             $Result = "Fail"
         }
     }
-    end {
+    end
+    {
         # Return Standardized Test Results:
         $ReturnObj | Add-Member NoteProperty "Host" ($HostName)
         $ReturnObj | Add-Member NoteProperty "Test" ("Web Status")

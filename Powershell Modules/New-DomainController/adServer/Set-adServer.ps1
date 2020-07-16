@@ -4,9 +4,11 @@ function Set-adServer
         [Parameter(mandatory = $true)]
         $passedData,
         [Parameter(mandatory = $true)]
-        $Creds
+        [securestring]$Creds
     )
     [CmdletBinding]
+
+    [string]$ModuleName = 'Set-adServer'
     
     if (0 -eq ($passedData.rootDomainController).length)
     {
@@ -30,7 +32,7 @@ function Set-adServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
         
     }
@@ -55,7 +57,7 @@ function Set-adServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
     }
 }

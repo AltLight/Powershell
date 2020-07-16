@@ -1,11 +1,13 @@
 
 
-Function Test-HostConnection {
+Function Test-HostConnection
+{
     [Cmdletbinding()]
     Param(
         $PassedHost
     )
-    begin {
+    begin
+    {
         # Set script variables:
         $HostName = $PassedHost.hostname
         $ComputerName = $PassedHost.computername
@@ -13,19 +15,23 @@ Function Test-HostConnection {
         $ReturnObj = New-Object psobject
         $Result = $null
     }
-    process {
+    process
+    {
         # Set up test:
         $Test = Test-Connection -ComputerName $ComputerName -Count 2 -Quiet
 
         # Check test results:
-        if ($Test -eq $PassRequirement) {
+        if ($Test -eq $PassRequirement)
+        {
             $Result = "Pass"
         }
-        else {
+        else
+        {
             $Result = "Fail"
         }
     }
-    end {
+    end
+    {
         # Return Standardized Test Results:
         $ReturnObj | Add-Member NoteProperty "Host" ($HostName)
         $ReturnObj | Add-Member NoteProperty "Test" ("Host Connection")

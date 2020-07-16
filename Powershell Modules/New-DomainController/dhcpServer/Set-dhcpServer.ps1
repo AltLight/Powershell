@@ -7,7 +7,7 @@ function Set-dhcpServer
     [CmdletBinding]
 
     $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
-    $LogFile = "C:/Log/New-DomainController.txt"
+    [string]$LogFile = "C:/Log/New-DomainController.txt"
 
     netsh dhcp add securitygroups
     Restart-Service dhcpserver

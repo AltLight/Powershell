@@ -7,15 +7,16 @@ function Set-adServices
         $dhcpData
     )
 
+    [string]$ModuleName = 'Set-adServices'
     # Confiugre DNS & DHCP
-    Write-Output "[INFO] [$($TimeStamp.Invoke())] Installing DNS and DHCP Services" | Out-File $LogFile -Append
+    Write-ToLog -ModuleName $ModuleName -InfoMessage "Installing DNS and DHCP Services"
     Install-WindowsFeature DNS -IncludeManagementTools
     Install-WindowsFeature DHCP -IncludeManagementTools
 
-    Write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring DNS and DHCP Services" | Out-File $LogFile -Append
+    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS and DHCP Services"
     Set-dnsServer -passedData $dnsData
     Set-dhcpServer -passedData $dhcpData
 
-    write-Output "[INFO] [$($TimeStamp.Invoke())] $CompName has finished being configured." | Out-File $LogFile -Append
+    Write-ToLog -ModuleName $ModuleName -InfoMessage "$CompName has finished being configured."
 }
         

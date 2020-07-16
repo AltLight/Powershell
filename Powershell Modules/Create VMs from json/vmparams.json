@@ -1,0 +1,194 @@
+[
+    {
+        "vmname" : "FW-01",
+        "ostype" : "FreeBSD",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "16",
+        "memoryGB" : "1",
+        "cpucount" : "1",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "4500",
+        "nics" : [
+            {
+                "nic1" : "vFW_To_TheVoid"
+            },
+            {
+                "nic2" : "secure-mgmt"
+            },
+            {
+                "nic3" : "standard-ether"
+            },
+            {
+                "nic4" : "secure-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "ELK",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        "folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "",
+        "memoryGB" : "3",
+        "cpucount" : "6",
+        "corespersocket" : "1",
+        "cpureservation" : "700",
+        "cpulimit" : "5000",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "Kibana",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        "folder" : "Web-Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "20",
+        "memoryGB" : "3",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "4500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "NTP-01",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "16",
+        "memoryGB" : "1",
+        "cpucount" : "1",
+        "corespersocket" : "1",
+        "cpureservation" : "200",
+        "cpulimit" : "2500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "NTP-02",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "16",
+        "memoryGB" : "1",
+        "cpucount" : "1",
+        "corespersocket" : "1",
+        "cpureservation" : "200",
+        "cpulimit" : "2500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "NMS_Server",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        " folder" : "Web-Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "20",
+        "memoryGB" : "3",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "4500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "NMS_Database",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        " folder" : "Databases",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "150",
+        "memoryGB" : "3",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "3500",
+        "nics" : [
+            {
+                "nic1" : "secure-ether"
+            },
+            {
+                "nic2" : "secure-mgmt"
+            }
+        ]
+    },
+    {
+        "vmname" : "Yum",
+        "ostype" : "Centos7",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "200",
+        "memoryGB" : "2",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "3500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "Emelia-DC",
+        "ostype" : "Windows2019",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "60",
+        "memoryGB" : "4",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "3500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    },
+    {
+        "vmname" : "Albedo-DC",
+        "ostype" : "Windows2019",
+        "VMHost" : "vcsa",
+        " folder" : "Services",
+        "datastore" : "vCenter-Core",
+        "diskGB" : "60",
+        "memoryGB" : "4",
+        "cpucount" : "2",
+        "corespersocket" : "1",
+        "cpureservation" : "500",
+        "cpulimit" : "3500",
+        "nics" : [
+            {
+                "nic1" : "standard-ether"
+            }
+        ]
+    }
+]

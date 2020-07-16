@@ -1,0 +1,88 @@
+[
+    {
+        "hostname" : "Test-DC-01",
+        "ipv4" : [{
+            "ip" : "10.8.7.22",
+            "prefixlength" : "26",
+            "gateway" : "10.8.7.1",
+            "dnsserver" : [
+                "10.8.7.1",
+                "1.1.1.1"
+            ]
+        }],
+        "adServer" : [{
+            "rootDomainController" : "",
+            "CreateDnsDelegation" : false,
+            "DatabasePath" : "%SYSTEMROOT%\\NTDS",
+            "DomainMode" : "Win2008R2",
+            "ForestMode" : "Win2008R2",
+            "domainName" : "nazerick.mhl",
+            "domainNetbiosName" : "NAZERICK",
+            "InstallDNS" : true,
+            "LogPath" : "%SYSTEMROOT%\\NTDS",
+            "NoRebootOnCompletion" : true,
+            "SysvolPath" : "%SYSTEMROOT%\\SYSVOL",
+            "Force" : true
+        }],
+        "dhcpServer" : [{
+            "scope1" : [{
+                "networkIP" : "10.8.1.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.1.1"
+                ],
+                "gateway" : "10.8.1.1"
+            }],
+            "scope2" : [{
+                "networkIP" : "10.8.1.128",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.1.129"
+                ],
+                "gateway" : "10.8.1.129"
+            }],
+            "scope3" : [{
+                "networkIP" : "10.8.7.0",
+                "subnet" : "255.255.255.192",
+                "dns" : [
+                    "10.8.7.1"
+                ],
+                "gateway" : "10.8.7.1"
+            }]
+        }],
+        "dnsServer" : [{
+            "primarylz" : [{
+                "zone1" : [{
+                    "replicationScope" : "nazerick.mhl",
+                    "networkid" : [
+                        "10.8.0",
+                        "10.8.1",
+                        "10.8.2",
+                        "10.8.3",
+                        "10.8.4",
+                        "10.8.5",
+                        "10.8.6",
+                        "10.8.7",
+                        "10.10.10",
+                        "172.16"
+                    ],
+                    "staticEntryFiles" : [
+                        "\\staticHosts.csv"
+                    ],
+                    "dnsforwarders" : [
+                        "10.8.7.1"
+                    ]
+                }]
+            }],
+            "secondarylz" : [{
+                "zone1" : [{
+                    "secondaryadDomain" : "",
+                    "secondaryadServerIP" : [
+                        ""
+                    ],
+                    "secondaryadHostname" : ""
+                }]
+            }]
+        }]
+    }
+]

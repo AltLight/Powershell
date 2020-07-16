@@ -12,8 +12,7 @@ function Set-IPv4
     )
     [CmdletBinding]
 
-    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
-    $LogFile = "C:/Log/New-DomainController.txt"
+    [string]$ModuleName = 'Set-IPv4'
     
     $ipArgs = @{
         "IPAddress" = $ipv4Address;
@@ -24,7 +23,7 @@ function Set-IPv4
         "ServerAddress" = $dnsAddress -join ','
     }
     $adapter = Get-NetAdapter | Where-Object { $_.Status -eq "up" }
-    $IPType = "IPv4"
+    [string]$IPType = "IPv4"
     try
     {
         # Remove any existing IP, gateway from our ipv4 adapter
@@ -42,7 +41,7 @@ function Set-IPv4
     }
     catch
     {
-        write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
+        $ReturnData = $_.exception.message
     }
 
     if ($ipv4Address -eq ($adapter | Get-NetIPConfiguration).IPv4Address.IPAddress)

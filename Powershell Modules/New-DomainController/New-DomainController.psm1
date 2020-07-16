@@ -13,31 +13,42 @@
 function New-DomainController
 {
     param(
-        [switch]$FirstReboot
+        [switch]$Initialize,
+        [switch]$Configure
     )
     [CmdletBinding]
 
-    if ($false -eq (Test-Path -Path "C:\Log"))
-    {
-        mkdir -p C:\Log
-    }
+    $ModuleName = 'New-DomainController'
     $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
-    $LogFile = "C:/Log/New-DomainController.txt"
     [string]$CompName = $env:COMPUTERNAME
-    $ServerData = (Get-Content -Raw -Path "$PSScriptRoot\dcInfo.json"  |`
-        ConvertFrom-Json) |`
-        Where-Object hostname -Match $CompName
+    [string]$dcConfigDirectory = "$PSScriptRoot\_DC_Config_Files"
+
+    $ServerData = Get-ChildItem -Path $dcConfigDirectory |`
+        Where-Object Name -Match $CompName |`
+        Get-Content -Raw |`
+        ConvertFrom-Json
         
     if ($null -eq $ServerData)
     {
-        write-Output "[ERROR] [$($TimeStamp.Invoke())] No configuration settings found for $CompName, aborting operations." | Out-File $LogFile -Append
+        Write-ToLog -ModuleName $ModuleName -ErrorMessage "No configuration settings found for $CompName, aborting operations."
         break
     }
 
-    if ($FirstReboot)
+    if ($Initialize)
+    {
+        Initialize-AD -ipData $ServerData.ipv4 -adData $ServerData.adServer
+    }
+    if ($Configure)
     {
         Set-adServices -dnsData $ServerData.dnsServer -dhcpData $ServerData.dhcpServer
         break
-    }  
-    Initialize-AD -ipData $ServerData.ipv4 -adData $ServerData.adServer
+    }
+
+    if (!($Initialize) -and !($Configure))
+    {
+        $message = "[INFO] [$($TimeStamp.Invoke())] No switch option was called, nothing to do. Aborting operation." 
+        Write-Host $message
+        Write-ToLog -ModuleName $ModuleName -InfoMessage $message
+        Break
+    }
 }

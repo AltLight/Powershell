@@ -30,53 +30,61 @@
        Write-ToLog -ModuleName $ModuleName -ErrorMessage $.exception.message
     }
 .EXAMPLE
-   Write-ToLog -ModuleName "Test" -CustomLogLocation "\\remote-server\folder\file.txt" -InfoMessage "This is an example log"
+   Write-ToLog -ModuleName "Test" -CustomPath "\\remote-server\folder\file.txt" -InfoMessage "This is an example log"
 #>
-function Write-ToLog {
+function Write-ToLog
+{
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
         [string]$ModuleName,
-        [string]$CustomLogFileLocation,
+        [string]$CustomPath,
         [string]$InfoMessage,
         [string]$WarningMessage,
         [string]$ErrorMessage
     )
 
     # Sert Module Variables:
-    $TimeStamp = { Get-Date -Format hh:mm:ss }
-    $Date = { Get-Date -Format MM-dd-yyyy }
+    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
+    $Date = [scriptblock]::Create('Get-Date -Format MM-dd-yyyy')
 
     # Set the log file and directory variables:
-    if (0 -eq $CustomLogFileLocation.Length) {
-        $LogDir = "C:\PowerShellLogs\$Date\$ModuleName\"
-        $LogFileName = "$date-$ModuleName.log"
-        $FullLogFilePath = $LogDir + $LogFileName
+    if (0 -ne $CustomPath.Length)
+    {
+        $LogDir = (Split-Path $CustomPath) + '\'
+        $LogFileName = Split-Path $CustomPath -Leaf
+        $FullLogFilePath = $CustomPath
     }
-    else {
-        $LogDir = (Split-Path $CustomLogFileLocation) + '\'
-        $LogFileName = Split-Path $CustomLogFileLocation -Leaf
+    else
+    {
+        $LogDir = "C:\PowerShell Logs\$($Date.invoke())\$ModuleName\"
+        $LogFileName = "$ModuleName.log"
         $FullLogFilePath = $LogDir + $LogFileName
     }
 
     # Create Log Directory and/or log file it it/they do not exist:
-    if ($false -eq (Test-Path $FullLogFilePath)) {
-        if ($false -eq (Test-Path $LogDir)) {
+    if ($false -eq (Test-Path $FullLogFilePath))
+    {
+        if ($false -eq (Test-Path $LogDir))
+        {
             New-Item $LogDir -ItemType Directory | Out-Null
         }
-        if ($false -eq (Test-Path $FullLogFilePath)) {
+        if ($false -eq (Test-Path $FullLogFilePath))
+        {
             New-Item -Name $LogFileName -Path $LogDir | Out-Null
         }
     }
 
     # Write any/all messages to the log file:
-    if ($InfoMessage) {
-        "[INFO] [$($TimeStamp)] $ModuleName | $InfoMessage"
+    if ($InfoMessage)
+    {
+        $message = "[INFO] [$($TimeStamp.invoke())] $ModuleName | $InfoMessage"
     }
     if ($WarningMessage) {
-        "[WARNING] [$($TimeStamp)] $ModuleName | $WarningMessage"
+        $message = "[WARNING] [$($TimeStamp.invoke())] $ModuleName | $WarningMessage"
     }
     if ($ErrorMessage) {
-        "[ERROR] [$($TimeStamp)] $ModuleName | $ErrorMessage"
+        $message = "[ERROR] [$($TimeStamp.invoke())] $ModuleName | $ErrorMessage"
     }
+    Write-Output $message | Out-File $FullLogFilePath -Append
 }

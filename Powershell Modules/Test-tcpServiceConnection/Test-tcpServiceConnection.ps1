@@ -1,11 +1,13 @@
 
 
-Function Test-tcpServiceConnection {
+Function Test-tcpServiceConnection
+{
     [Cmdletbinding()]
     Param(
         $PassedHost
     )
-    begin {
+    begin
+    {
         # Set script variables:
         $HostName = $PassedHost.hostname
         $ComputerName = $PassedHost.computername
@@ -14,18 +16,22 @@ Function Test-tcpServiceConnection {
         $tcpTest = New-Object System.Net.Sockets.TcpClient
         $ReturnObj = New-Object psobject
     }
-    process {
+    process
+    {
         $tcpServiceResult = New-Object psobject
-        Try {
+        try
+        {
             $tcpTest.Connect($ComputerName, $Port)
             $tcpServiceResult = "$Port Pass"
         }
-        catch {
+        catch
+        {
             $tcpServiceResult = "$Port Fail"
         }
         $tcpServiceResult | Add-Member NoteProperty "Result" ($tcpServiceResult)
     }
-    end {
+    end
+    {
         $TestedAgainst = $ComputerName + " : " + $Port
 
         # Return Standardized Test Results:

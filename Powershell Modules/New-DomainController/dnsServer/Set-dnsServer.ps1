@@ -6,11 +6,11 @@ function Set-dnsServer
     )
     [CmdletBinding]
 
-    $TimeStamp = [scriptblock]::Create('Get-Date -Format hh:mm:ss')
-    $LogFile = "C:/Log/New-DomainController.txt"
+    [string]$ModuleName = "Set-dnsServer"
     $CompName = $env:COMPUTERNAME
 
-    write-Output "[INFO] [$($TimeStamp.Invoke())] Configuring DNS Server on $CompName" | Out-File $LogFile
+    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS Server on $CompName"
+
     foreach ($Zone in $passedData.primarylz)
     {
         $replicationsScope = $pZone.replicationsScope
@@ -23,7 +23,7 @@ function Set-dnsServer
             }
             catch
             {
-                write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile
+                Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
             }
         }
         foreach ($file in $pZone.staticEntryFiles)
@@ -31,7 +31,7 @@ function Set-dnsServer
             $filePath = "$PSScriptRoot\$file"
             if ($file.split(".")[1] -ne "csv")
             {
-                write-Output "[ERROR] [$($TimeStamp.Invoke())] $filePath could not be found, or is not a csv file. This file and all data in it will be skipped." | Out-File $LogFile
+                Write-ToLog -ModuleName $ModuleName -ErrorMessage "$filePath could not be found, or is not a csv file. This file and all data in it will be skipped."
                 break
             }
             $staticHosts = Get-Content -Raw -Path $filePath | ConvertFrom-CSV
@@ -39,11 +39,11 @@ function Set-dnsServer
             {
                 try
                 {
-                    Add-DnsServerResourceRecordA -ZoneName $replicationsScope -Name $host.hostname  -IPv4Address $host.ip    
+                    Add-DnsServerResourceRecordA -ZoneName $replicationsScope -Name $host.hostname -IPv4Address $host.ip    
                 }
                 catch
                 {
-                    write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
+                    Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
                 }
             }
         }
@@ -58,7 +58,7 @@ function Set-dnsServer
         }
         catch
         {
-            write-Output "[ERROR] [$($TimeStamp.Invoke())] $($_.exception.message)" | Out-File $LogFile    
+            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
         }
     }
 }

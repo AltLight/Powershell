@@ -1,11 +1,13 @@
 
 
-Function Test-udpServiceConnection {
+Function Test-udpServiceConnection
+{
     [Cmdletbinding()]
     Param(
         $PassedHost
     )
-    begin {
+    begin
+    {
         # Set script variables:
         $HostName = $PassedHost.hostname
         $ComputerName = $PassedHost.computername
@@ -14,18 +16,22 @@ Function Test-udpServiceConnection {
         $udpTest = New-Object System.Net.Sockets.udpClient
         $ReturnObj = New-Object psobject
     }
-    process {
+    process
+    {
         $udpServiceResult = New-Object psobject
-        Try {
+        try
+        {
             $udpTest.Connect($ComputerName, $Port)
             $udpServiceResult = "$Port Pass"
         }
-        catch {
+        catch
+        {
             $udpServiceResult = "$Port Fail"
         }
         $udpServiceResult | Add-Member NoteProperty "Result" ($udpServiceResult)
     }
-    end {
+    end
+    {
         $TestedAgainst = $ComputerName + " : " + $Port
 
         # Return Standardized Test Results:
