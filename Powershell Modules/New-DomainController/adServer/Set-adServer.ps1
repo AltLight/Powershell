@@ -37,10 +37,10 @@ function Set-adServer
     }
     else
     {
-        $adCreds = Get-Credential -UserName "$($passedData.domainName)\administrator"
+        $adCreds = Get-Credential -UserName "$($passedData.domainName)\administrator" -Message "Need local domain creds"
         $Arguments = @{
             "Credential" = $adCreds
-            "DomainType" = TreeDomain
+            "DomainType" = "TreeDomain"
             "NewDomainName" = $passedData.domainName
             "ParentDomainName" = $passedData.rootDomainController
             "InstallDNS" = $passedData.InstallDNS         
@@ -50,6 +50,7 @@ function Set-adServer
             "SysvolPath" = $passedData.SysvolPath
             "LogPath" = $passedData.LogPath
             "NoRebootOnCompletion" = $passedData.NoRebootOnCompletion
+            "Force" = $true
         }
         try
         {
