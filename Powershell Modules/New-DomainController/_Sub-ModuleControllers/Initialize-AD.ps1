@@ -42,5 +42,5 @@ function Initialize-AD
     }
 
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Rebooting server to apply Active Directory configuration."
-#    Restart-Computer -Force
+    Restart-Computer -Force
 }

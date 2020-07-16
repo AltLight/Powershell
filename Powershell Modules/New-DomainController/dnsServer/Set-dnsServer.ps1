@@ -14,7 +14,6 @@ function Set-dnsServer
     foreach ($pZone in $passedData.primarylz)
     {
         $replicationScope = $pZone.replicationScope
-        Add-DnsServerPrimaryZone -ReplicationScope $replicationScope
         foreach ($network in $pZone.networkid)
         {
             try

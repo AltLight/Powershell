@@ -22,7 +22,7 @@ function Set-dhcpServer
         }
         try
         {
-            Set-DhcpServerv4Scope @AddScopeArgs
+            Add-DhcpServerv4Scope @AddScopeArgs
         }
         catch
         {
@@ -46,7 +46,6 @@ function Set-dhcpServer
 
         $SetOptionsArgs = @{
             "ScopeID" = $scope.networkIP
-            "DnsDomain" = $scope.domain
             "DnsServer" = $scope.dns -join ","
             "Router" = $scope.gateway
         }
