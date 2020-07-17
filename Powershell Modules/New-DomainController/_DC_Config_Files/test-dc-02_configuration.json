@@ -11,6 +11,7 @@
     }],
     "adServer" : [{
         "rootDomainController" : "test-dc-01.nazerick.mhl",
+        "domainType" : "TreeDomain",
         "CreateDnsDelegation" : false,
         "DatabasePath" : "%SYSTEMROOT%\\NTDS",
         "DomainMode" : "Win2008R2",
@@ -42,9 +43,6 @@
                 "zoneName" : "tree.mhl",
                 "networkid" : [
                     "10.9.1.0/26"
-                ],
-                "staticEntryFiles" : [
-                    ""
                 ],
                 "dnsforwarders" : [
                     "10.8.7.22"

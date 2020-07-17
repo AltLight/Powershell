@@ -11,6 +11,7 @@
     }],
     "adServer" : [{
         "rootDomainController" : "",
+        "domainType" : "",
         "CreateDnsDelegation" : false,
         "DatabasePath" : "%SYSTEMROOT%\\NTDS",
         "DomainMode" : "Win2008R2",
@@ -73,9 +74,6 @@
                     "10.8.7.0/26",
                     "10.10.10.0/30",
                     "172.16.0/26"
-                ],
-                "staticEntryFiles" : [
-                    "\\staticHosts.csv"
                 ],
                 "dnsforwarders" : [
                     "10.8.7.1"

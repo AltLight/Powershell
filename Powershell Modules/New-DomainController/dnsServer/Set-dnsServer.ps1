@@ -1,8 +1,43 @@
+<#
+.DESCRIPTION
+   This module configures a DNS server based on the
+   parameters defined in a servers JSON configuration 
+   file. These parameters are passed to this script by
+   a controller module.
+
+   Any Static Hosts should be listed in the hosts 
+   "_staticHosts.csv" file located in the configuration
+   file directory.
+
+   This is called by an overarching controlling module
+   and is not called by any user directly.
+   
+.Required Modules
+   Write-ToLog
+#>
+<#
+Version:
+--------
+   1.0
+Created by:
+-----------
+   AltLight
+Date of creation:
+-----------------
+   16 July 2020
+Date Last Modified:
+-------------------
+
+Last Modified By:
+-----------------
+
+#>
 function Set-dnsServer
 {
     param(
         [Parameter(mandatory = $true)]
-        $passedData
+        $ServerData,
+        $StaticData
     )
     [CmdletBinding]
 
@@ -24,16 +59,9 @@ function Set-dnsServer
                 Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
             }
         }
-        foreach ($file in $pZone.staticEntryFiles)
+        if ($null -ne $StaticData)
         {
-            $filePath = "$PSScriptRoot\$file"
-            if ($file.split(".")[1] -ne "csv")
-            {
-                Write-ToLog -ModuleName $ModuleName -ErrorMessage "$filePath could not be found, or is not a csv file. This file and all data in it will be skipped."
-                break
-            }
-            $staticHosts = Get-Content -Raw -Path $filePath | ConvertFrom-CSV
-            foreach ($shost in $staticHosts)
+            foreach ($shost in $StaticData)
             {
                 try
                 {

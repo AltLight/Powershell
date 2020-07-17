@@ -1,3 +1,33 @@
+<#
+.DESCRIPTION
+   This module configures a DHCP server based on the
+   parameters defined in a servers JSON configuration 
+   file. These parameters are passed to this script by
+   a controller module.
+
+   This is called by an overarching controlling module
+   and is not called by any user directly.
+   
+.Required Modules
+   Write-ToLog
+#>
+<#
+Version:
+--------
+   1.0
+Created by:
+-----------
+   AltLight
+Date of creation:
+-----------------
+   16 July 2020
+Date Last Modified:
+-------------------
+
+Last Modified By:
+-----------------
+
+#>
 function Set-dhcpServer
 {
     param(

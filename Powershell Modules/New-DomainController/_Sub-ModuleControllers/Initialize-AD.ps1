@@ -1,4 +1,31 @@
+<#
+.DESCRIPTION
+   This is a sub controlling module that calls subscripts that 
+   will configure a DC up until it need to be rebooted. 
+   
+   This is called by an overarching controlling module and is
+   not called by any user directly.
+   
+.Required Modules
+   Write-ToLog
+#>
+<#
+Version:
+--------
+   1.0
+Created by:
+-----------
+   AltLight
+Date of creation:
+-----------------
+   16 July 2020
+Date Last Modified:
+-------------------
 
+Last Modified By:
+-----------------
+
+#>
 function Initialize-AD
 {
     param(

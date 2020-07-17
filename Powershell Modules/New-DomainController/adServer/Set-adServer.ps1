@@ -1,3 +1,33 @@
+<#
+.DESCRIPTION
+   This module configures Active Directory based on the
+   parameters defined in a servers JSON configuration
+   file. Theses parameters are passed to this script
+   by a controller module.
+
+   This is called by an overarching controlling module and is
+   not called by any user directly.
+   
+.Required Modules
+   Write-ToLog
+#>
+<#
+Version:
+--------
+   1.0
+Created by:
+-----------
+   AltLight
+Date of creation:
+-----------------
+   16 July 2020
+Date Last Modified:
+-------------------
+
+Last Modified By:
+-----------------
+
+#>
 function Set-adServer
 {
     param(
@@ -40,7 +70,7 @@ function Set-adServer
         $adCreds = Get-Credential -UserName "$($passedData.domainName)\administrator" -Message "Need local domain creds"
         $Arguments = @{
             "Credential" = $adCreds
-            "DomainType" = "TreeDomain"
+            "DomainType" = $passedData.domainType
             "NewDomainName" = $passedData.domainName
             "ParentDomainName" = $passedData.rootDomainController
             "InstallDNS" = $passedData.InstallDNS         
