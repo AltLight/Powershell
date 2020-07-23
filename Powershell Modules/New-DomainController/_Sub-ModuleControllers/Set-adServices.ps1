@@ -47,11 +47,11 @@ function Set-adServices
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS Services"
     if (($null -ne $dnsStaticData) -or (0 -ne $dnsStaticData.length))
     {
-        Set-dnsServer -ServerData $dnsData -StaticData $dnsStaticData
+        Set-dnsServer -ServerData $dnsServerData -StaticData $dnsStaticData
     }
     else
     {
-        Set-dnsServer -ServerData $dnsData
+        Set-dnsServer -ServerData $dnsServerData
     }
     Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DHCP Services"
     Set-dhcpServer -passedData $dhcpData

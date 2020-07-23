@@ -23,10 +23,10 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   23 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function Set-adServer
 {
@@ -36,26 +36,35 @@ function Set-adServer
     )
     [CmdletBinding]
     
+    Import-Module ADDSDeployment
     [string]$ModuleName = 'Set-adServer'
+
+    $DatabasePath = "C:\Windows\NTDS"
+    $SysvolPath = "C:\Windows\SYSVOL"
+    <#
+    The DomainMode should be changed to the lowest version
+    of  windows server version used IF you are using multiple
+    version of windows on as Domain Controllers
+    #>
+    $DomainMode = "WinThreshold"
 
     if (0 -eq ($passedData.rootDomainController).length)
     {
-        $Arguments = @{
-            "CreateDnsDelegation" = $passedData.CreateDnsDelegation
-            "DatabasePath" = $passedData.DatabasePath
-            "DomainMode" = $passedData.DomainMode
-            "ForestMode" = $passedData.ForestMode
-            "domainName" = $passedData.domainName
-            "domainNetbiosName" = $passedData.domainNetbiosName
-            "InstallDNS" = $passedData.InstallDNS
-            "LogPath" = $passedData.LogPath
-            "NoRebootOnCompletion" = $passedData.NoRebootOnCompletion
-            "SysvolPath" = $passedData.SysvolPath
-            "Force" = $passedData.Force
-        }
         try
         {
-            Install-ADDSForest @Arguments
+            Install-ADDSForest `
+                -CreateDnsDelegation:$passedData.CreateDnsDelegation `
+                -DatabasePath $DatabasePath `
+                -DomainMode $DomainMode `
+                -DomainName $passedData.domainName `
+                -DomainNetbiosName $passedData.domainNetbiosName `
+                -ForestMode $DomainMode `
+                -InstallDns:$passedData.InstallDNS `
+                -LogPath $DatabasePath `
+                -NoRebootOnCompletion:$passedData.NoRebootOnCompletion `
+                -SysvolPath $SysvolPath `
+                -Force:$passedData.Force
+            
             $ReturnData = $true
         }
         catch
@@ -67,24 +76,26 @@ function Set-adServer
     }
     else
     {
-        $adCreds = Get-Credential -UserName "$($passedData.domainName)\administrator" -Message "Need local domain creds"
-        $Arguments = @{
-            "Credential" = $adCreds
-            "DomainType" = $passedData.domainType
-            "NewDomainName" = $passedData.domainName
-            "ParentDomainName" = $passedData.rootDomainController
-            "InstallDNS" = $passedData.InstallDNS         
-            "CreateDnsDelegation" = $passedData.CreateDnsDelegation
-            "DomainMode" = $passedData.DomainMode
-            "DatabasePath" = $passedData.DatabasePath
-            "SysvolPath" = $passedData.SysvolPath
-            "LogPath" = $passedData.LogPath
-            "NoRebootOnCompletion" = $passedData.NoRebootOnCompletion
-            "Force" = $true
-        }
+        $adCreds = Get-Credential -UserName "administrator@$($passedData.rootDomainController)" -Message "Need credentials for forest domain controller:"
         try
         {
-            Install-ADDSDomain @Arguments
+            Install-ADDSDomain `
+                -NoGlobalCatalog:$false `
+                -CreateDnsDelegation:$passedData.CreateDnsDelegation `
+                -Credential $adCreds `
+                -DatabasePath $DatabasePath `
+                -DomainMode $DomainMode `
+                -DomainType $passedData.domainType `
+                -InstallDns:$passedData.InstallDNS `
+                -LogPath $DatabasePath `
+                -NewDomainName $passedData.domainName `
+                -NewDomainNetbiosName $passedData.domainNetbiosName `
+                -ParentDomainName $passedData.rootDomain `
+                -NoRebootOnCompletion:$passedData.NoRebootOnCompletion `
+                -SiteName "Default-First-Site-Name" `
+                -SysvolPath $SysvolPath `
+                -Force:$passedData.Force
+            
             $ReturnData = $true
         }
         catch

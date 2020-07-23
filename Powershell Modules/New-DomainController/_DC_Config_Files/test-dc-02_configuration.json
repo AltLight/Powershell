@@ -5,23 +5,17 @@
         "prefixlength" : "26",
         "gateway" : "10.8.7.1",
         "dnsserver" : [
-            "10.8.7.1",
-            "1.1.1.1"
+            "10.8.7.22"
         ]
     }],
     "adServer" : [{
-        "rootDomainController" : "test-dc-01.nazerick.mhl",
+        "rootDomain" : "nazerick.mhl",
         "domainType" : "TreeDomain",
         "CreateDnsDelegation" : false,
-        "DatabasePath" : "%SYSTEMROOT%\\NTDS",
-        "DomainMode" : "Win2008R2",
-        "ForestMode" : "Win2008R2",
         "domainName" : "tree.mhl",
         "domainNetbiosName" : "TREE",
         "InstallDNS" : true,
-        "LogPath" : "%SYSTEMROOT%\\NTDS",
         "NoRebootOnCompletion" : true,
-        "SysvolPath" : "%SYSTEMROOT%\\SYSVOL",
         "Force" : true
     }],
     "dhcpServer" : [

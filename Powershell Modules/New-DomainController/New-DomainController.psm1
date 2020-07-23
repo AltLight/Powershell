@@ -34,10 +34,10 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   23 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function New-DomainController
 {
@@ -87,11 +87,11 @@ function New-DomainController
         if (0 -ne $StaticHostDataPath.length)
         {
             $StaticHostData = Get-Content -Path $StaticHostDataPath -Raw | ConvertFrom-Csv
-            Set-adServices -dnsData $ServerData.dnsServer -dnsStaticData $StaticHostData -dhcpData $ServerData.dhcpServer 
+            Set-adServices -dnsServerData $ServerData.dnsServer -dnsStaticData $StaticHostData -dhcpData $ServerData.dhcpServer 
         }
         else
         {
-            Set-adServices -dnsData $ServerData.dnsServer -dhcpData $ServerData.dhcpServer
+            Set-adServices -dnsServerData $ServerData.dnsServer -dhcpData $ServerData.dhcpServer
         }
     }
 }

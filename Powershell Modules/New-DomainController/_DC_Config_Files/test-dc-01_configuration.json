@@ -10,18 +10,13 @@
         ]
     }],
     "adServer" : [{
-        "rootDomainController" : "",
+        "rootDomain" : "",
         "domainType" : "",
         "CreateDnsDelegation" : false,
-        "DatabasePath" : "%SYSTEMROOT%\\NTDS",
-        "DomainMode" : "Win2008R2",
-        "ForestMode" : "Win2008R2",
         "domainName" : "nazerick.mhl",
         "domainNetbiosName" : "NAZERICK",
         "InstallDNS" : true,
-        "LogPath" : "%SYSTEMROOT%\\NTDS",
         "NoRebootOnCompletion" : true,
-        "SysvolPath" : "%SYSTEMROOT%\\SYSVOL",
         "Force" : true
     }],
     "dhcpServer" : [
@@ -32,7 +27,7 @@
             "endIP" : "192.168.1.30",
             "subnet" : "255.255.255.192",
             "dns" : [
-                "10.8.1.1"
+                "10.8.7.1"
             ],
             "gateway" : "192.168.1.1"
         },
@@ -43,7 +38,7 @@
             "endIP" : "192.168.2.30",
             "subnet" : "255.255.255.192",
             "dns" : [
-                "10.8.1.1"
+                "10.8.7.1"
             ],
             "gateway" : "192.168.2.1"
         },
@@ -54,7 +49,7 @@
             "endIP" : "192.168.3.30",
             "subnet" : "255.255.255.192",
             "dns" : [
-                "10.8.1.1"
+                "10.8.7.1"
             ],
             "gateway" : "192.168.3.1"
         }
