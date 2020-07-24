@@ -6,5 +6,7 @@ function Set-Hostname
     )
     [CmdletBinding]
 
-    Rename-Computer -NewName $hostname -Confirm:$false | Out-Null
+    Rename-Computer `
+        -NewName $hostname `
+        -Confirm:$false | Out-Null
 }

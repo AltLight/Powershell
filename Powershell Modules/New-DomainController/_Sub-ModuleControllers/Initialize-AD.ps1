@@ -21,10 +21,10 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   24 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function Initialize-AD
 {
@@ -50,23 +50,42 @@ function Initialize-AD
 
     if ($true -ne $ipSetCheck)
     {
-        Write-ToLog -ModuleName $ModuleName -ErrorMessage "$CompName | Errored setting the network adapter, error mesasge was:`n$ipSetCheck"
+        Write-ToLog `
+            -ModuleName $ModuleName `
+            -ErrorMessage "$CompName | Errored setting the network adapter, error mesasge was:`n$ipSetCheck"
         break
     }
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "$CompName IP settings set to:`n$($ipArgs | Out-String)"
+    Write-ToLog `
+        -ModuleName $ModuleName `
+        -InfoMessage "$CompName IP settings set to:`n$($ipArgs | Out-String)"
 
     # Install & Configure Initial Services:
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Installing Bits & Active Directory Services"
-    Install-WindowsFeature -Name Bits
-    Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
+    Write-ToLog `
+        -ModuleName $ModuleName `
+        -InfoMessage "Installing Bits & Active Directory Services"
 
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring Active Directory"
-    $adServerCheck = Set-adServer -passedData $ServerData.adServer 
+    Install-WindowsFeature -Name Bits
+
+    Install-WindowsFeature `
+        -Name AD-Domain-Services `
+        -IncludeManagementTools
+
+    Write-ToLog `
+        -ModuleName $ModuleName `
+        -InfoMessage "Configuring Active Directory"
+    
+    $adServerCheck = Set-adServer -passedData $ServerData.adServer
+
     if ($true -ne $adServerCheck)
     {
-        Write-Host "An Error has occured while configuring Active Directory, review the error logs (see Write-ToLog module)." -ForegroundColor Red
+        Write-Host `
+            "An Error has occured while configuring Active Directory, review the error logs (see Write-ToLog module)." `
+            -ForegroundColor Red
         Break
     }
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Rebooting server to apply Active Directory configuration."
+    Write-ToLog `
+        -ModuleName $ModuleName `
+        -InfoMessage "Rebooting server to apply Active Directory configuration."
+    
     Restart-Computer -Force
 }

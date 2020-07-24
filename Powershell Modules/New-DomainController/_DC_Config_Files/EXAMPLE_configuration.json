@@ -1,0 +1,80 @@
+{
+    "hostname" : "COMPUTER NAME",
+    "ipv4" : [{
+        "ip" : "X.X.X.X",
+        "prefixlength" : "XX",
+        "gateway" : "X.X.X.X",
+        "dnsserver" : [
+            "X.X.X.X",
+            "X.X.X.X"
+        ]
+    }],
+    "adServer" : [{
+        "rootDomain" : " empty | ROOTDOMAIN.ROOT",
+        "domainType" : "ForestDomain | ChildDomain | TreeDomain",
+        "CreateDnsDelegation" : false,
+        "domainName" : "DOMAIN.ROOT | A.DOMAIN.ROOT",
+        "domainNetbiosName" : "DOMAIN",
+        "InstallDNS" : true,
+        "NoRebootOnCompletion" : true,
+        "Force" : true
+    }],
+    "dhcpServer" : [
+        {
+            "name" : "UNIQUE NAME 1",
+            "networkIP" : "X.X.X.X",
+            "startIP" : "X.X.X.X",
+            "endIP" : "X.X.X.X",
+            "subnet" : "X.X.X.X",
+            "dns" : [
+                "X.X.X.X"
+            ],
+            "gateway" : "X.X.X.X"
+        },
+        {
+            "name" : "UNIQUE NAME 2",
+            "networkIP" : "X.X.X.X",
+            "startIP" : "X.X.X.X",
+            "endIP" : "X.X.X.X",
+            "subnet" : "X.X.X.X",
+            "dns" : [
+                "X.X.X.X"
+            ],
+            "gateway" : "X.X.X.X"
+        },
+        {
+            "name" : "UNIQUE NAME 3",
+            "networkIP" : "X.X.X.X",
+            "startIP" : "X.X.X.X",
+            "endIP" : "X.X.X.X",
+            "subnet" : "X.X.X.X",
+            "dns" : [
+                "X.X.X.X"
+            ],
+            "gateway" : "X.X.X.X"
+        }
+    ],
+    "dnsServer" : [{
+        "primarylz" : [
+            {
+                "zoneName" : "DOMAIN.ROOT | A.DOMAIN.ROOT",
+                "networkid" : [
+                    "X.X.X.X/XX",
+                    "X.X.X.X/XX"
+                ],
+                "dnsforwarders" : [
+                    "X.X.X.X"
+                ]
+            }
+        ],
+        "conditionalForwarders" : [
+            {
+                "name" : "DOMAIN.ROOT | A.DOMAIN.ROOT",
+                "replicationScope" : "Forest | Domain | Legacy",
+                "MasterServers" : [
+                    "X.X.X.X"
+                ]
+            }
+        ]
+    }]
+}

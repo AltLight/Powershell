@@ -23,10 +23,10 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   24 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function Set-dhcpServer
 {
@@ -56,9 +56,10 @@ function Set-dhcpServer
         }
         catch
         {
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
-        
         
         $SetScopeArgs = @{
             "ScopeID" = $scope.networkIP
@@ -70,9 +71,10 @@ function Set-dhcpServer
         }
         catch
         {
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
-        
 
         $SetOptionsArgs = @{
             "ScopeID" = $scope.networkIP
@@ -85,9 +87,10 @@ function Set-dhcpServer
         }
         catch
         {
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
-        
     }
     
     $hostIP = (Get-NetAdapter |`
@@ -98,11 +101,14 @@ function Set-dhcpServer
 
     try
     {
-        Add-DhcpServerInDC -DnsName $hostDomain -IpAddress $hostIP
+        Add-DhcpServerInDC `
+            -DnsName $hostDomain `
+            -IpAddress $hostIP
     }
     catch
     {
-        Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+        Write-ToLog `
+            -ModuleName $ModuleName `
+            -ErrorMessage $_.exception.message
     }
-    
 }

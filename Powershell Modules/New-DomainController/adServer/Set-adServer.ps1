@@ -23,7 +23,7 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-   23 July 2020
+   24 July 2020
 Last Modified By:
 -----------------
    AltLight
@@ -48,7 +48,12 @@ function Set-adServer
     #>
     $DomainMode = "WinThreshold"
 
-    if (0 -eq ($passedData.rootDomainController).length)
+    if (($null -eq $passedData.domainType) -or ("" -eq $passedData.domainType))
+    {
+        $ReturnData = $false
+    }
+
+    if ($passedData.domainType -match "ForestDoamin")
     {
         try
         {
@@ -70,13 +75,17 @@ function Set-adServer
         catch
         {
             $ReturnData = $null
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
-        
     }
-    else
+    
+    if (($passedData.domainType -match "TreeDomain") -or ($passedData.domainType -match "ChileDomain"))
     {
-        $adCreds = Get-Credential -UserName "administrator@$($passedData.rootDomainController)" -Message "Need credentials for forest domain controller:"
+        $adCreds = Get-Credential `
+            -UserName "administrator@$($passedData.rootDomain)" `
+            -Message "Need credentials for forest domain controller:"
         try
         {
             Install-ADDSDomain `
@@ -101,7 +110,9 @@ function Set-adServer
         catch
         {
             $ReturnData = $null
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
     }
     Return $ReturnData

@@ -23,38 +23,61 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   24 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function Set-adServices
 {
-    param(
-        [Parameter(mandatory = $true)]
-        $dnsServerData,
-        $dnsStaticData,
-        [Parameter(mandatory = $true)]
-        $dhcpData
-    )
+   param(
+      [Parameter(mandatory = $true)]
+      $dnsServerData,
+      $dnsStaticData,
+      [Parameter(mandatory = $true)]
+      $dhcpData
+   )
 
-    [string]$ModuleName = 'Set-adServices'
+   [string]$ModuleName = 'Set-adServices'
 
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Installing DNS and DHCP Services"
-    Install-WindowsFeature DNS -IncludeManagementTools
-    Install-WindowsFeature DHCP -IncludeManagementTools
+   Write-ToLog `
+     -ModuleName $ModuleName `
+     -InfoMessage "Installing DNS and DHCP Services"
+   
+   Set-dcSecurity
 
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS Services"
-    if (($null -ne $dnsStaticData) -or (0 -ne $dnsStaticData.length))
-    {
-        Set-dnsServer -ServerData $dnsServerData -StaticData $dnsStaticData
-    }
-    else
-    {
-        Set-dnsServer -ServerData $dnsServerData
-    }
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DHCP Services"
-    Set-dhcpServer -passedData $dhcpData
+   Install-WindowsFeature `
+      -Name DNS `
+      -IncludeManagementTools
+   
+   Install-WindowsFeature `
+      -Name DHCP `
+      -IncludeManagementTools
 
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "$CompName has finished being configured."
+   Write-ToLog `
+      -ModuleName $ModuleName `
+      -InfoMessage "Configuring DNS Services"
+
+   if (($null -ne $dnsStaticData) -or (0 -ne $dnsStaticData.length))
+   {
+      Set-dnsServer `
+         -ServerData $dnsServerData `
+         -StaticData $dnsStaticData
+   }
+   else
+   {
+      Set-dnsServer `
+         -ServerData $dnsServerData
+   }
+   
+   Write-ToLog `
+      -ModuleName $ModuleName `
+      -InfoMessage "Configuring DHCP Services"
+   
+   Set-dhcpServer `
+      -passedData $dhcpData
+
+   Write-ToLog `
+      -ModuleName $ModuleName `
+      -InfoMessage "$CompName has finished being configured."
 }

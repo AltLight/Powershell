@@ -34,7 +34,7 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-   23 July 2020
+   24 July 2020
 Last Modified By:
 -----------------
    AltLight
@@ -53,15 +53,17 @@ function New-DomainController
     [string]$ConfigFileIdentifier = "configuration"
     [string]$dcConfigDirectory = "$PSScriptRoot\_DC_Config_Files"
 
-    $ServerData = Get-ChildItem -Path $dcConfigDirectory |`
-        Where-Object Name -Match $ConfigFileIdentifier |`
-        Where-Object Name -Match $CompName |`
-        Get-Content -Raw |`
+    $ServerData = Get-ChildItem -Path $dcConfigDirectory | `
+        Where-Object Name -Match $ConfigFileIdentifier | `
+        Where-Object Name -Match $CompName | `
+        Get-Content -Raw | `
         ConvertFrom-Json
             
     if ($null -eq $ServerData)
     {
-        Write-ToLog -ModuleName $ModuleName -ErrorMessage "No configuration settings found for $CompName, aborting operations."
+        Write-ToLog `
+            -ModuleName $ModuleName `
+            -ErrorMessage "No configuration settings found for $CompName, aborting operations."
         break
     }
 
@@ -69,29 +71,43 @@ function New-DomainController
     {
         $message = "[INFO] [$($TimeStamp.Invoke())] No switch option was called, nothing to do. Aborting operation." 
         Write-Host $message
-        Write-ToLog -ModuleName $ModuleName -InfoMessage $message
+        Write-ToLog `
+            -ModuleName $ModuleName `
+            -InfoMessage $message
         Break
     }
 
     if ($Initialize)
     {
-        Initialize-AD -ipData $ServerData.ipv4 -adData $ServerData.adServer
+        Initialize-AD `
+            -ipData $ServerData.ipv4 `
+            -adData $ServerData.adServer
     }
 
     if ($Configure)
     {
         $HostFileIdentifier = "staticHosts"
-        $StaticHostDataPath = (Get-ChildItem -Path $dcConfigDirectory -Include *.csv -Recurse |`
-            Where-Object Name -Match  $HostFileIdentifier|`
+        $StaticHostDataPath = (Get-ChildItem -Path $dcConfigDirectory -Include *.csv -Recurse | `
+            Where-Object Name -Match  $HostFileIdentifier| `
             Where-Object Name -Match $CompName).fullname
+        
         if (0 -ne $StaticHostDataPath.length)
         {
-            $StaticHostData = Get-Content -Path $StaticHostDataPath -Raw | ConvertFrom-Csv
-            Set-adServices -dnsServerData $ServerData.dnsServer -dnsStaticData $StaticHostData -dhcpData $ServerData.dhcpServer 
+            $StaticHostData = Get-Content `
+                -Path $StaticHostDataPath `
+                -Raw | `
+                ConvertFrom-Csv
+
+            Set-adServices `
+                -dnsServerData $ServerData.dnsServer `
+                -dnsStaticData $StaticHostData `
+                -dhcpData $ServerData.dhcpServer 
         }
         else
         {
-            Set-adServices -dnsServerData $ServerData.dnsServer -dhcpData $ServerData.dhcpServer
+            Set-adServices `
+                -dnsServerData $ServerData.dnsServer `
+                -dhcpData $ServerData.dhcpServer
         }
     }
 }

@@ -27,10 +27,10 @@ Date of creation:
    16 July 2020
 Date Last Modified:
 -------------------
-
+   24 July 2020
 Last Modified By:
 -----------------
-
+   AltLight
 #>
 function Set-dnsServer
 {
@@ -44,19 +44,26 @@ function Set-dnsServer
     [string]$ModuleName = "Set-dnsServer"
     $CompName = $env:COMPUTERNAME
 
-    Write-ToLog -ModuleName $ModuleName -InfoMessage "Configuring DNS Server on $CompName"
+    Write-ToLog `
+        -ModuleName $ModuleName `
+        -InfoMessage "Configuring DNS Server on $CompName"
 
-    foreach ($pZone in $passedData.primarylz)
+    foreach ($pZone in $ServerData.primarylz)
     {
         foreach ($network in $pZone.networkid)
         {
             try
             {
-                Add-DnsServerPrimaryZone -NetworkId $network -ReplicationScope Forest -PassThru
+                Add-DnsServerPrimaryZone `
+                    -NetworkId $network `
+                    -ReplicationScope Forest `
+                    -PassThru
             }
             catch
             {
-                Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+                Write-ToLog `
+                    -ModuleName $ModuleName `
+                    -ErrorMessage $_.exception.message
             }
         }
         if ($null -ne $StaticData)
@@ -65,26 +72,46 @@ function Set-dnsServer
             {
                 try
                 {
-                    Add-DnsServerResourceRecordA -ZoneName $pZone.zoneName -Name $shost.hostname -IPv4Address $shost.ip    
+                    Add-DnsServerResourceRecordA `
+                        -ZoneName $pZone.zoneName `
+                        -Name $shost.hostname `
+                        -IPv4Address $shost.ip
+                    Add-DnsServerResourceRecord `
+                        -ZoneName "$($shost.lookupzone).in-addr.arpa" `
+                        -A `
+                        -Name $shost.hostname
+                        -IPv4Address $shost.ip
                 }
                 catch
                 {
-                    Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+                    Write-ToLog `
+                        -ModuleName $ModuleName `
+                        -ErrorMessage $_.exception.message
                 }
             }
         }
     }
-    foreach ($sZone in $passedData.secoondarylz)
+    
+    foreach ($cZone in $ServerData.conditionalForwarders)
     {
-        $zoneFile = "$($sZone.secondaryadDomain).dns"
-        $masterServers = $sZone.secondaryadServerIP -join ","
         try
         {
-            Add-DnsServerSecondaryZone -Name $domain -ZoneFile $zoneFile -MasterServers $masterServers
+            $ConditionalForwarder = Add-DnsServerConditionalForwarderZone `
+                -Name $cZone.name `
+                -ReplicationScope $cZone.replicationScope `
+                -MasterServers $cZone.MasterServers -join "," `
+                -Confirm:$false
+                -PassThrough
+            
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -InfoMessage "$($ConditionalForwarder | Out-String)"
         }
         catch
         {
-            Write-ToLog -ModuleName $ModuleName -ErrorMessage $_.exception.message
+            Write-ToLog `
+                -ModuleName $ModuleName `
+                -ErrorMessage $_.exception.message
         }
     }
 }
