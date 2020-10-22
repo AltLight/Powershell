@@ -2,7 +2,9 @@ function Get-ImageData
 {
     [cmdletbinding()]
     param(
-        [string]$SourcePath
+        [Parameter(Mandatory=$false, Position=0)]
+            [ValidateScript({ (Test-Path -Path $_) })]
+            [string]$SourcePath
     )
     
     [string]$defaultDir = "N:\Pictures"
@@ -22,13 +24,6 @@ function Get-ImageData
 
     if (0 -lt $SourcePath.Length)
     {
-        Write-Verbose "Testing user defined source path: $SourcePath"
-        if (!(Test-Path -Path $SourcePath))
-        {
-            Write-Error "The user specified source path was not a valid path. Aborting operations,"
-            break
-        }
-        Write-Verbose "User defined source path is valid."
         $defaultDir = $SourcePath
     }
     if (!(Test-Path -Path $defaultDir))
