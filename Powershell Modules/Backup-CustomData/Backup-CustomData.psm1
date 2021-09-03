@@ -24,19 +24,33 @@ function Backup-CustomData
         [ValidateScript({$_ | Test-Path})]
         [string]$jsonPath
     )
-
-    [string]$mtSwitch = $env:NUMBER_OF_PROCESSORS -1
+    # Define module wide variables.
+    [string]$mtSwitch = ($env:NUMBER_OF_PROCESSORS -1)
     [string]$rSwitch = 1
     [string]$wSwitch = 3
-    
-    if (0 -gt $jsonPath.Length)
+
+    # check if user defined a json file.
+    if (($null -eq $jsonPath) -or (0 -eq $jsonPath.Length))
     {
         $fileName = "backup_list.json"
         [string]$jsonPath = $PSScriptRoot + "\" + $fileName
     }
 
+    # validate jsons existance.
+    if (($null -eq $jsonPath) -or ("" -eq $jsonPath))
+    {
+        Write-Error "The 'jsonPath' variable was null or an empty string.`nAborting operations."
+        break
+    }
+    if (!(Test-Path $jsonPath -ErrorAction SilentlyContinue))
+    {
+        Write-Error "Could not find path: $jsonPath.`nAborting Operations"
+        break
+    }
+
     $jsonImport = Get-Content -Raw -Path $jsonPath | ConvertFrom-Json
 
+    # loop and do work
     foreach ($pair in $jsonImport)
     {
         [string]$source = $pair.source
