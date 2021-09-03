@@ -1,9 +1,14 @@
 function Copy-vmDirectory
 {
     [cmdletbinding()]
-    Param()
+    Param(
+        [string]$remoteFolder,
+        [validatescript({$_ | Test-Path})]
+        [string]$copyToLocation
+    )
 
-    $username = $env:USERNAME
+    [string]$savedJobData = 
+    [string]$username = $env:USERNAME
     $pass = Read-host `
         -Prompt "`nEnter the password for: $username" | `
         ConvertTo-SecureString `
@@ -14,5 +19,8 @@ function Copy-vmDirectory
         -TypeName System.Management.Automation.PSCredential `
         -ArgumentList $username,$pass
     
-    
+    if ((0 -eq $remoteFolder.Length) -and (0 -eq $copyToLocation.Length))
+    {
+
+    }
 }
