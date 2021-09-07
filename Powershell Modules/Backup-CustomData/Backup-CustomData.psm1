@@ -22,26 +22,32 @@ function Backup-CustomData
     Param(
         [ValidateScript({$_.split('.')[1] -ieq 'json'})]
         [ValidateScript({$_ | Test-Path})]
-        [string]$jsonPath
+        [string]$jsonPath,
+        
+        [switch]$archive
     )
     # Define module wide variables.
     [string]$mtSwitch = ($env:NUMBER_OF_PROCESSORS -1)
     [string]$rSwitch = 1
     [string]$wSwitch = 3
+    [string]$fileName = "backup_list.json"
 
-    # check if user defined a json file.
+    if ($archive)
+    {
+        if (0 -lt $jsonPath.Length)
+        {
+            Write-Error "User cannot call 'archive' and define a json path.`nAborting operations."
+            break
+        }
+        $fileName = "archive_list.json"
+    }
+    # check if a json file is defined.
     if (($null -eq $jsonPath) -or (0 -eq $jsonPath.Length))
     {
-        $fileName = "backup_list.json"
         [string]$jsonPath = $PSScriptRoot + "\" + $fileName
     }
 
     # validate jsons existance.
-    if (($null -eq $jsonPath) -or ("" -eq $jsonPath))
-    {
-        Write-Error "The 'jsonPath' variable was null or an empty string.`nAborting operations."
-        break
-    }
     if (!(Test-Path $jsonPath -ErrorAction SilentlyContinue))
     {
         Write-Error "Could not find path: $jsonPath.`nAborting Operations"
@@ -59,4 +65,4 @@ function Backup-CustomData
 
         Invoke-Command $cmd 
     }
-}
+}#close function
